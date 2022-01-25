@@ -60,19 +60,19 @@
     </v-row>
     <v-row class="ma-2 mb-8">
       <v-col cols="6">
-        <span class="subheading font-weight-light mr-1">Loan amount: </span>
+        <span class="subheading font-weight-light mr-2">Loan amount: </span>
         <span
           class="text-h3 orange--text font-weight-light mr-1"
           v-text="loan"
         ></span>
-        <span class="subheading font-weight-light mr-1">million</span>
+        <span class="subheading font-weight-light mr-1">million nok</span>
       </v-col>
     </v-row>
     <v-row class="ma-2">
       <v-col cols="6">
         <v-slider
           label="Interest Rate"
-          v-model="slider"
+          v-model="intersetRate"
           step="0.1"
           thumb-label="always"
           class="align-center"
@@ -82,7 +82,7 @@
         >
           <template v-slot:append>
             <v-text-field
-              v-model="slider"
+              v-model="intersetRate"
               class="mt-0 pt-0"
               hide-details
               single-line
@@ -100,7 +100,7 @@
       <v-col cols="6">
         <v-slider
           label="Repayment Period"
-          v-model="slider"
+          v-model="repaymentReriod"
           step="1"
           thumb-label="always"
           class="align-center"
@@ -110,7 +110,7 @@
         >
           <template v-slot:append>
             <v-text-field
-              v-model="slider"
+              v-model="repaymentReriod"
               label="Amount"
               class="mt-0 pt-0"
               hide-details
@@ -150,12 +150,16 @@ export default Vue.extend({
     equity: number;
     result: number;
     loan: string;
+    intersetRate: number;
+    repaymentReriod: number;
   } {
     return {
       totalValue: 3,
       equity: 1,
       result: 0,
       loan: '2',
+      intersetRate: 2.4,
+      repaymentReriod: 10,
     };
   },
   // computed: {
@@ -186,15 +190,18 @@ export default Vue.extend({
   methods: {
     //send the parameters
     send() {
-      // const data: ParameterData = {
-      //   A: parseInt(this.numberA),
-      //   B: parseInt(this.numberB),
-      // };
-      // setParameters(data)
-      //   .then((response) => this.setResult(response))
-      //   .catch((error) => {
-      //     console.log(error);
-      //   });
+      const data: ParameterData = {
+        houseValue: this.totalValue,
+        equity: this.equity,
+        interestRate: this.intersetRate,
+        paymentPeriod: this.repaymentReriod,
+        type: 'loan',
+      };
+      setParameters(data)
+        .then((response) => this.setResult(response))
+        .catch((error) => {
+          console.log(error);
+        });
     },
 
     //server got the parameter
