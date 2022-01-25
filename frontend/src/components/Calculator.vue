@@ -61,7 +61,10 @@
     <v-row class="ma-2 mb-8">
       <v-col cols="6">
         <span class="subheading font-weight-light mr-1">Loan amount: </span>
-        <span class="text-h3 font-weight-light mr-1" v-text="loan"></span>
+        <span
+          class="text-h3 orange--text font-weight-light mr-1"
+          v-text="loan"
+        ></span>
         <span class="subheading font-weight-light mr-1">million</span>
       </v-col>
     </v-row>
