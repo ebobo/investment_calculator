@@ -10,8 +10,8 @@
           step="0.1"
           thumb-label="always"
           class="align-center"
-          :max="10"
-          :min="1"
+          max="10"
+          min="1"
           hide-details
         >
           <template v-slot:append>
@@ -32,15 +32,15 @@
     </v-row>
 
     <v-row class="ma-2">
-      <v-col cols="8">
+      <v-col cols="12">
         <v-slider
           label="Equity"
           v-model="equity"
           step="0.1"
           thumb-label="always"
           class="align-center"
-          :max="5"
-          :min="0"
+          max="5"
+          min="0"
           hide-details
         >
           <template v-slot:append>
@@ -69,15 +69,15 @@
       </v-col>
     </v-row>
     <v-row class="ma-2">
-      <v-col cols="6">
+      <v-col cols="8">
         <v-slider
           label="Interest Rate"
           v-model="intersetRate"
           step="0.1"
           thumb-label="always"
           class="align-center"
-          :max="5"
-          :min="1"
+          max="5"
+          min="1"
           hide-details
         >
           <template v-slot:append>
@@ -94,18 +94,30 @@
           </template>
         </v-slider>
       </v-col>
+      <v-col cols="4">
+        <v-text-field
+          class="ml-6 pt-0"
+          label="One-Time Fee"
+          v-model="oneTimeFee"
+          step="100"
+          type="number"
+          max="10000"
+          min="0"
+          outlined
+        ></v-text-field>
+      </v-col>
     </v-row>
 
     <v-row class="ma-2">
-      <v-col cols="6">
+      <v-col cols="8">
         <v-slider
-          label="Repayment Period"
+          label="Repayment Year"
           v-model="repaymentReriod"
           step="1"
           thumb-label="always"
           class="align-center"
-          :max="30"
-          :min="1"
+          max="30"
+          min="1"
           hide-details
         >
           <template v-slot:append>
@@ -122,6 +134,18 @@
             ></v-text-field>
           </template>
         </v-slider>
+      </v-col>
+      <v-col cols="4">
+        <v-text-field
+          class="ml-6 pt-0"
+          label="Periodic Fee"
+          v-model="periodicFee"
+          step="100"
+          type="number"
+          max="1000"
+          min="0"
+          outlined
+        ></v-text-field>
       </v-col>
     </v-row>
 
@@ -152,6 +176,8 @@ export default Vue.extend({
     loan: string;
     intersetRate: number;
     repaymentReriod: number;
+    oneTimeFee: number;
+    periodicFee: number;
   } {
     return {
       totalValue: 3,
@@ -160,6 +186,8 @@ export default Vue.extend({
       loan: '2',
       intersetRate: 2.4,
       repaymentReriod: 10,
+      oneTimeFee: 3000,
+      periodicFee: 60,
     };
   },
   // computed: {
@@ -196,6 +224,8 @@ export default Vue.extend({
         interestRate: this.intersetRate,
         paymentPeriod: this.repaymentReriod,
         type: 'loan',
+        oneTimeFee: this.oneTimeFee,
+        periodicFee: this.periodicFee,
       };
       setParameters(data)
         .then((response) => this.setResult(response))

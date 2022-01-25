@@ -5,6 +5,8 @@ export interface ParameterData {
   equity: number;
   interestRate: number;
   paymentPeriod: number;
+  periodicFee: number;
+  oneTimeFee: number;
   type?: string;
 }
 

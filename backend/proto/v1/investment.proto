@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package proto.v1;
+
+option go_package = "api/go/proto";
+
+message Case {
+    int32 house_value = 1;
+    int32 equity = 2;
+    float interest_rate = 3;
+    int32 payment_year = 4;
+    int32 onetime_fee = 5; 
+    int32 periodic_fee = 6;
+    optional string type = 7;
+}
+
+message Report {
+    float total_interest = 1;
+    float periodic_payment = 2;
+    int32 total_payment = 3; 
+}
