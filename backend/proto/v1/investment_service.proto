@@ -12,7 +12,7 @@ option go_package = "api/go/proto";
 service InvestmentService{
     rpc GetResult(Case) returns (Report) {
         option (google.api.http) = {
-            post: "/api/v1/parameter"
+            post: "/api/v1/parameters"
             body: "*"
         };
     } 

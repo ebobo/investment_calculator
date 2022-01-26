@@ -1,5 +1,11 @@
 <template>
   <v-container>
+    <h3 class="ma-4 blue-grey--text">Client :</h3>
+    <v-row class="ma-1">
+      <v-col cols="4">
+        <v-text-field v-model="client" label="Name"></v-text-field>
+      </v-col>
+    </v-row>
     <h3 class="ma-4 blue-grey--text">Parameters :</h3>
 
     <v-row class="ma-2">
@@ -157,19 +163,46 @@
       <v-spacer></v-spacer>
     </v-row>
 
-    <v-row class="ma-2">
-      <h3 class="ma-2 mt-8 blue-grey--text">{{ 'result : ' + result }}</h3>
+    <h3 class="ma-4 blue-grey--text">Result :</h3>
+    <v-row class="ma-2 mb-8">
+      <v-col cols="6">
+        <span class="subheading font-weight-light mr-2">Total Interest: </span>
+        <span
+          class="text-h4 blue--text font-weight-light mr-1"
+          v-text="totalInterest"
+        ></span>
+        <span class="subheading font-weight-light mr-1">nok</span>
+      </v-col>
+      <v-col cols="6">
+        <span class="subheading font-weight-light mr-2">Monthly Payment: </span>
+        <span
+          class="text-h4 orange--text font-weight-light mr-1"
+          v-text="monthlyPayment"
+        ></span>
+        <span class="subheading font-weight-light mr-1">nok</span>
+      </v-col>
+    </v-row>
+    <v-row class="ma-2 mb-8">
+      <v-col cols="6">
+        <span class="subheading font-weight-light mr-2">Total Payment: </span>
+        <span
+          class="text-h4 red--text font-weight-light mr-1"
+          v-text="totalPayment"
+        ></span>
+        <span class="subheading font-weight-light mr-1">nok</span>
+      </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import { setParameters, ParameterData } from '../services/data';
+import { setParameters, ParameterData, ResultData } from '../services/data';
 
 export default Vue.extend({
   components: {},
   data(): {
+    client: string;
     totalValue: number;
     equity: number;
     result: number;
@@ -178,8 +211,12 @@ export default Vue.extend({
     repaymentReriod: number;
     oneTimeFee: number;
     periodicFee: number;
+    totalInterest: number;
+    monthlyPayment: number;
+    totalPayment: number;
   } {
     return {
+      client: 'Ellen',
       totalValue: 3,
       equity: 1,
       result: 0,
@@ -188,6 +225,9 @@ export default Vue.extend({
       repaymentReriod: 10,
       oneTimeFee: 3000,
       periodicFee: 60,
+      totalInterest: 0,
+      monthlyPayment: 0,
+      totalPayment: 0,
     };
   },
   // computed: {
@@ -219,13 +259,14 @@ export default Vue.extend({
     //send the parameters
     send() {
       const data: ParameterData = {
-        houseValue: this.totalValue,
+        client: this.client,
+        houseValue: this.totalValue * 1000000,
         equity: this.equity,
         interestRate: this.intersetRate,
-        paymentPeriod: this.repaymentReriod,
-        type: 'loan',
+        paymentYear: this.repaymentReriod,
         oneTimeFee: this.oneTimeFee,
         periodicFee: this.periodicFee,
+        type: 'loan',
       };
       setParameters(data)
         .then((response) => this.setResult(response))
@@ -235,8 +276,10 @@ export default Vue.extend({
     },
 
     //server got the parameter
-    setResult(data: any) {
-      this.result = 0;
+    setResult(data: ResultData) {
+      this.totalInterest = data.totalInterest;
+      this.monthlyPayment = data.periodicPayment;
+      this.totalPayment = data.totalPayment;
     },
   },
 });
