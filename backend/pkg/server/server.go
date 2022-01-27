@@ -40,7 +40,7 @@ func New(c Config) *Server {
 func (s *Server) Start() error {
 	s.ctx, s.cancel = context.WithCancel(context.Background())
 
-	s.loanService = service.NewLoanServer()
+	s.loanService = service.NewLoanServer(s.ctx)
 
 	// Start gRPC interface.
 	s.grpcStarted.Add(1)

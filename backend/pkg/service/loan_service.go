@@ -12,15 +12,19 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/reflection"
+	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 // LoanService that implements the pb API
 type LoanServer struct {
+	recordStream   proto.InvestmentService_SaveRecordServer
+	ctx            context.Context
 	grpcClientConn *grpc.ClientConn
+	proto.UnimplementedInvestmentServiceServer
 }
 
 // NewUserServer creates a new Service instance
-func NewLoanServer() *LoanServer {
+func NewLoanServer(c context.Context) *LoanServer {
 	return &LoanServer{}
 }
 
@@ -57,9 +61,25 @@ func (s *LoanServer) GetResult(ctx context.Context, in *proto.Case) (*proto.Repo
 		float32(in.GetOneTimeFee()))
 
 	report := &proto.Report{Client: in.GetClient(), TotalInterest: totalIntersetAndFees, PeriodicPayment: periodocPaymentAmount, TotalPayment: totalPayment}
-
+	err := s.recordStream.Send(report)
+	if err != nil {
+		fmt.Errorf("Error %v \n", err)
+	}
 	return report, nil
 }
+
+//SaveRecord implementation
+func (s *LoanServer) SaveRecord(_ *emptypb.Empty, stream proto.InvestmentService_SaveRecordServer) error {
+	s.recordStream = stream
+	<-s.ctx.Done()
+	return nil
+}
+
+//GetRecords implementation
+// func (s *LoanServer) GetRecords(ctx context.Context, in *proto.User) (*proto.Records, error) {
+// report := &proto.Reports{proto.Report{}}
+// return report, nil
+// }
 
 // RESTMuxViaGRPC creates a mux which uses an internal gRPC client.  This has the benefit that
 // REST accesses will go through interceptors.

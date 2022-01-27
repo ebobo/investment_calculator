@@ -3,10 +3,7 @@ package main
 import (
 	"log"
 	"os"
-	"os/signal"
-	"syscall"
 
-	"github.com/ebobo/investment_calculator_record/pkg/service"
 	"github.com/jessevdk/go-flags"
 )
 
@@ -20,21 +17,21 @@ func main() {
 		log.Fatalf("error parsing flags: %v", err)
 	}
 
-	recordService := server.New(server.Config{
-		GRPCListenAddr: opt.GRPCAddr,
-	})
+	// recordService := server.New(server.Config{
+	// 	GRPCListenAddr: opt.GRPCAddr,
+	// })
 
-	e := service.Start()
-	if e != nil {
-		log.Fatalf("error starting server: %v", e)
-	}
+	// e := service.Start()
+	// if e != nil {
+	// 	log.Fatalf("error starting server: %v", e)
+	// }
 
-	// Block forever
-	// Capture Ctrl-C
-	c := make(chan os.Signal, 1)
-	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
-	<-c
+	// // Block forever
+	// // Capture Ctrl-C
+	// c := make(chan os.Signal, 1)
+	// signal.Notify(c, os.Interrupt, syscall.SIGTERM)
+	// <-c
 
-	server.Shutdown()
+	// server.Shutdown()
 
 }

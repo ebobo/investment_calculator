@@ -4,7 +4,6 @@ package proto.v1;
 
 
 import "google/api/annotations.proto";
-import "google/protobuf/empty.proto";
 import "proto/v1/investment.proto";
 
 option go_package = "api/go/proto";
@@ -16,11 +15,5 @@ service InvestmentService{
             post: "/api/v1/parameters"
             body: "*"
         };
-    }
-    rpc GetRecords(User) returns (Records) {
-        option (google.api.http) = {
-            get: "/api/v1/user/{client}"
-        };
-    }
-    rpc SaveRecord (google.protobuf.Empty) returns (stream Report) {} 
+    } 
 }
