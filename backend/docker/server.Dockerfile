@@ -2,7 +2,7 @@ FROM golang:alpine AS builder
 RUN apk add --no-cache git
 RUN apk add --no-cache build-base
 WORKDIR /build
-COPY . .
+COPY . ./
 RUN make init
 RUN make build
 
