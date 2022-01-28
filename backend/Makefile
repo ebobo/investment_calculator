@@ -1,4 +1,4 @@
-all: lint gen
+all: lint gen build
 
 lint:
 	@buf lint
@@ -8,6 +8,10 @@ gen: clean
 
 clean:
 	@rm -rf pkg/api
+
+build:
+	@go mod tidy
+	@cd cmd/server && go build -o ../../bin/ic_server
 
 init:
 	@go install google.golang.org/protobuf/cmd/protoc-gen-go@latest

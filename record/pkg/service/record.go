@@ -35,7 +35,12 @@ func (ms *RecordService) Run() {
 
 	c := proto.NewInvestmentServiceClient(conn)
 
-	stream, err := c.SaveRecord(context.Background(), &emptypb.Empty{})
+	// WaitForReady configures the action to take when an RPC is attempted on broken connections or unreachable servers.
+	// If waitForReady is false and the connection is in the TRANSIENT_FAILURE state, the RPC will fail immediately.
+	// If waitForReady is true, the RPC client will block the call until a connection is available
+	// (or the call is canceled or times out) and will retry the call if it fails due to a transient error.
+	// gRPC will not retry if data was written to the wire unless the server indicates it did not process the data.
+	stream, err := c.SaveRecord(context.Background(), &emptypb.Empty{}, grpc.WaitForReady(true))
 	if err != nil {
 		log.Fatalf("open stream error %v", err)
 	}
