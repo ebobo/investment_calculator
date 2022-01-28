@@ -1,13 +1,19 @@
-all: lint gen
+all: lint gen build
 
+# @buf lint https://github.com/ebobo/investment_calculator.git#branch=master
 lint:
-	@buf lint https://github.com/ebobo/investment_calculator.git#branch=master
+	@buf lint
 
+# @buf generate https://github.com/ebobo/investment_calculator.git#branch=master,subdir=backend/proto/v1
 gen: clean
-	@buf generate https://github.com/ebobo/investment_calculator.git#branch=master,subdir=backend/proto/v1
+	@buf generate 
 
 clean:
 	@rm -rf pkg/api
+
+build:
+	@go mod tidy
+	@cd cmd && go build -o ../bin/record
 
 init:
 	@go install google.golang.org/protobuf/cmd/protoc-gen-go@latest

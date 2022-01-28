@@ -261,7 +261,7 @@ export default Vue.extend({
       const data: ParameterData = {
         client: this.client,
         houseValue: this.totalValue * 1000000,
-        equity: this.equity,
+        equity: this.equity * 1000000,
         interestRate: this.intersetRate,
         paymentYear: this.repaymentReriod,
         oneTimeFee: this.oneTimeFee,

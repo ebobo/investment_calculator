@@ -21,3 +21,11 @@ message Report {
     float periodic_payment = 3;
     float total_payment = 4; 
 }
+
+message User {
+    string client = 1;
+}
+
+message Records {
+    repeated Report reports = 1;
+}

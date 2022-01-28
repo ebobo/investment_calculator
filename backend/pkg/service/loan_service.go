@@ -25,7 +25,9 @@ type LoanServer struct {
 
 // NewUserServer creates a new Service instance
 func NewLoanServer(c context.Context) *LoanServer {
-	return &LoanServer{}
+	return &LoanServer{
+		ctx: c,
+	}
 }
 
 // Run grpc server
@@ -51,8 +53,6 @@ func (server *LoanServer) CloseInternalClientConn() error {
 //GetResult implementation
 func (s *LoanServer) GetResult(ctx context.Context, in *proto.Case) (*proto.Report, error) {
 
-	// fmt.Println(in.GetHouseValue(), in.GetInterestRate(), in.GetPaymentYear(), in.GetPeriodicFee(), in.GetOneTimeFee())
-
 	periodocPaymentAmount, totalPayment, totalIntersetAndFees := utility.BankLoanEqualInstallments(
 		uint32(in.GetHouseValue()),
 		in.GetInterestRate(),
@@ -61,9 +61,14 @@ func (s *LoanServer) GetResult(ctx context.Context, in *proto.Case) (*proto.Repo
 		float32(in.GetOneTimeFee()))
 
 	report := &proto.Report{Client: in.GetClient(), TotalInterest: totalIntersetAndFees, PeriodicPayment: periodocPaymentAmount, TotalPayment: totalPayment}
-	err := s.recordStream.Send(report)
-	if err != nil {
-		fmt.Errorf("Error %v \n", err)
+
+	if s.recordStream != nil {
+		go func() {
+			err := s.recordStream.Send(report)
+			if err != nil {
+				fmt.Printf("Error %v \n", err)
+			}
+		}()
 	}
 	return report, nil
 }
