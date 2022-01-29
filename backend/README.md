@@ -16,3 +16,6 @@ docker run -it --name ic-server -p9090:9090 ic-server:0.1.1
 
 stop
 docker stop ic-server
+
+check container
+docker inspect ic-server | grep IPAddress
