@@ -3,6 +3,7 @@ package server
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -31,6 +32,11 @@ func (s *Server) startHTTP() error {
 	}
 
 	// This is where you add other stuff you want to map in the mux
+
+	// Config endpoint
+	m.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintf(w, "Hello, Welcome to the IC-SERVER !")
+	}).Methods("GET")
 
 	// Add handler for REST interface
 	m.PathPrefix("/api/v1").Handler(restMux)
