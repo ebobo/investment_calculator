@@ -9,7 +9,7 @@ buf mod update
 # Build Docker image
 
 build
-docker build -f docker/server.Dockerfile -t ic-server:0.1.0 .
+docker build -f docker/server.Dockerfile -t ic-server:0.1.1 .
 
 run
 docker run -it --name ic-server -p9090:9090 ic-server:0.1.1
