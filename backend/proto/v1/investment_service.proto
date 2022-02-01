@@ -22,5 +22,5 @@ service InvestmentService{
             get: "/api/v1/user/{client}"
         };
     }
-    rpc SaveRecord (google.protobuf.Empty) returns (stream Report) {} 
+    rpc SaveRecord (google.protobuf.Empty) returns (stream Report) {}
 }

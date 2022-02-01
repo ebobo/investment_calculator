@@ -11,6 +11,7 @@ import (
 type Server struct {
 	grpcListenAddr string
 	httpListenAddr string
+	msGRPCAddr     string
 	loanService    *service.LoanServer
 	grpcStarted    *sync.WaitGroup
 	grpcStopped    *sync.WaitGroup
@@ -24,12 +25,14 @@ type Server struct {
 type Config struct {
 	GRPCListenAddr string
 	HTTPListenAddr string
+	MSGPRCAddr     string
 }
 
 func New(c Config) *Server {
 	return &Server{
 		grpcListenAddr: c.GRPCListenAddr,
 		httpListenAddr: c.HTTPListenAddr,
+		msGRPCAddr:     c.MSGPRCAddr,
 		grpcStarted:    &sync.WaitGroup{},
 		grpcStopped:    &sync.WaitGroup{},
 		httpStarted:    &sync.WaitGroup{},

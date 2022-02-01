@@ -4,34 +4,87 @@ import (
 	"context"
 	"io"
 	"log"
+	"net"
 
+	"github.com/ebobo/investment_calulator_record/db"
 	"github.com/ebobo/investment_calulator_record/pkg/api/go/proto/v1"
+	"github.com/ebobo/investment_calulator_record/pkg/model"
+	"github.com/jmoiron/sqlx"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/protobuf/types/known/emptypb"
+
+	_ "github.com/mattn/go-sqlite3"
 )
 
 // RecordService to save record data to database
 type RecordService struct {
-	grpcServerAddr string
+	icGrpcServerAddr string
+	msGrpcServerAddr string
+	sqliteDatabase   *sqlx.DB
 }
 
-func New(address string) *RecordService {
+func New(icAddress string, msAddress string) *RecordService {
 	return &RecordService{
-		grpcServerAddr: address,
+		icGrpcServerAddr: icAddress,
+		msGrpcServerAddr: msAddress,
+		sqliteDatabase:   nil,
 	}
+}
+
+//GetSavedRecords implementation
+func (ms *RecordService) GetSavedRecords(ctx context.Context, in *proto.User) (*proto.Records, error) {
+
+	reports := &proto.Records{}
+	results, err := db.GetRecordsByClient(ms.sqliteDatabase, in.Client)
+
+	if err != nil {
+		return reports, err
+	}
+	for _, r := range results {
+		reports.Reports = append(reports.Reports, &proto.Report{Client: r.Client, TotalInterest: r.TotalInterest, PeriodicPayment: r.TotalPayment, TotalPayment: r.TotalPayment})
+	}
+	log.Println("Records: ", reports)
+
+	return reports, nil
 }
 
 // Run runs whole algorithm to process maps
 func (ms *RecordService) Run() {
 	log.Println("Running record service")
 
-	conn, err := grpc.Dial(ms.grpcServerAddr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	err := db.CreateDataBase()
+	if err != nil {
+		log.Fatalf("can not create database %v", err)
+	}
+
+	// Open the created SQLite File
+	sqlite, err := sqlx.Open("sqlite3", "../data/ic-database.db")
+	if err != nil {
+		log.Fatalf("can not open database %v", err)
+	}
+
+	ms.sqliteDatabase = sqlite
+
+	// Defer Closing the database
+	defer ms.sqliteDatabase.Close()
+
+	e := db.CreateSchema(ms.sqliteDatabase) // Create Database Tables
+	if e != nil {
+		log.Fatalf("can not create schema  %v", e)
+	}
+
+	conn, err := grpc.Dial(ms.icGrpcServerAddr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatalf("did not connect %v", err)
 	} else {
-		log.Printf("connnect to grpc server at %s", ms.grpcServerAddr)
+		log.Printf("connnect to grpc server at %s", ms.icGrpcServerAddr)
 	}
+
+	//Start a grpc server
+	go func() {
+		ms.startGRPC()
+	}()
 
 	c := proto.NewInvestmentServiceClient(conn)
 
@@ -58,10 +111,30 @@ func (ms *RecordService) Run() {
 			if err != nil {
 				log.Fatalf("cannot receive %v", err)
 			}
-			log.Println("Record : ", resp.Client, resp.TotalInterest, resp.PeriodicPayment, resp.TotalPayment)
+
+			db.Addrecord(ms.sqliteDatabase, &model.Report{Client: resp.Client, TotalInterest: resp.TotalInterest, PeriodicPayment: resp.PeriodicPayment, TotalPayment: resp.TotalPayment})
 		}
 	}()
 
 	<-done //we will wait until all response is received
 	log.Printf("finished")
+}
+
+func (ms *RecordService) startGRPC() error {
+	listener, err := net.Listen("tcp", ms.msGrpcServerAddr)
+
+	if err != nil {
+		return err
+	}
+	gs := grpc.NewServer()
+
+	proto.RegisterRecordServiceServer(gs, ms)
+
+	// Start gRPC server
+
+	log.Printf("starting gRPC interface '%s'", ms.msGrpcServerAddr)
+	e := gs.Serve(listener)
+
+	return e
+
 }

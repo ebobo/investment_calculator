@@ -11,7 +11,8 @@ import (
 )
 
 var opt struct {
-	GRPCServerAddr string `short:"g" long:"grpc-addr" default:":9092" description:"gRPC server address"`
+	ICGRPCServerAddr string `short:"g" long:"grpc-addr" default:":9092" description:"gRPC server address"`
+	MSGRPCServerAddr string `short:"m" long:"ms-grpc-addr" default:":9094" description:"micro service gRPC server address"`
 }
 
 func main() {
@@ -20,7 +21,7 @@ func main() {
 		log.Fatalf("error parsing flags: %v", err)
 	}
 
-	recordService := service.New(opt.GRPCServerAddr)
+	recordService := service.New(opt.ICGRPCServerAddr, opt.MSGRPCServerAddr)
 
 	recordService.Run()
 
