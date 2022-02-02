@@ -14,4 +14,5 @@ RUN apk --no-cache add ca-certificates
 WORKDIR /record-ms
 # Copy binary
 COPY --from=builder /build/bin/record ./
+EXPOSE 9094
 CMD ./record

@@ -40,5 +40,4 @@ func main() {
 	<-c
 
 	server.Shutdown()
-
 }
