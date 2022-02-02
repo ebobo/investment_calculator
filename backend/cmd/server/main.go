@@ -25,6 +25,7 @@ func main() {
 	server := server.New(server.Config{
 		GRPCListenAddr: opt.GRPCAddr,
 		HTTPListenAddr: opt.HTTPAddr,
+		MSGPRCAddr:     opt.MSAddr,
 	})
 
 	e := server.Start()

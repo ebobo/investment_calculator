@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"fmt"
 	"sync"
 
 	"github.com/ebobo/investment_calculator/pkg/service"
@@ -46,12 +47,20 @@ func (s *Server) Start() error {
 	s.loanService = service.NewLoanServer(s.ctx)
 
 	// Start gRPC interface.
-	s.grpcStarted.Add(1)
+	s.grpcStarted.Add(2)
 	s.grpcStopped.Add(1)
 	err := s.startGRPC()
 	if err != nil {
 		return err
 	}
+
+	go func() {
+		err := s.connectMSGRPC()
+		if err != nil {
+			fmt.Println(err)
+		}
+		s.grpcStarted.Done()
+	}()
 	s.grpcStarted.Wait()
 
 	// Start the HTTP interface

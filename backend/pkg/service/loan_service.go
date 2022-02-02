@@ -20,6 +20,7 @@ type LoanServer struct {
 	recordStream   proto.InvestmentService_SaveRecordServer
 	ctx            context.Context
 	grpcClientConn *grpc.ClientConn
+	MsClient       proto.RecordServiceClient
 	proto.UnimplementedInvestmentServiceServer
 }
 
@@ -81,10 +82,11 @@ func (s *LoanServer) SaveRecord(_ *emptypb.Empty, stream proto.InvestmentService
 }
 
 //GetRecords implementation
-// func (s *LoanServer) GetRecords(ctx context.Context, in *proto.User) (*proto.Records, error) {
-// report := &proto.Reports{proto.Report{}}
-// return report, nil
-// }
+func (s *LoanServer) GetRecords(ctx context.Context, in *proto.User) (*proto.Records, error) {
+	report, _ := s.MsClient.GetSavedRecords(ctx, in)
+	fmt.Println(report)
+	return report, nil
+}
 
 // RESTMuxViaGRPC creates a mux which uses an internal gRPC client.  This has the benefit that
 // REST accesses will go through interceptors.
