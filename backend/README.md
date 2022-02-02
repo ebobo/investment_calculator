@@ -19,3 +19,6 @@ docker stop ic-server
 
 check container
 docker inspect ic-server | grep IPAddress
+
+clean builder layer image
+docker image prune --filter label=stage=builder

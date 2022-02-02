@@ -16,3 +16,9 @@ docker run -it --name record-ms record-ms:0.1.0
 
 stop
 docker stop record-ms
+
+check container
+docker inspect record-ms | grep IPAddress
+
+clean builder layer image
+docker image prune --filter label=stage=builder
