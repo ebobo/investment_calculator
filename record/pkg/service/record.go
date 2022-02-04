@@ -132,7 +132,7 @@ func (ms *RecordService) startGRPC() error {
 
 	// Start gRPC server
 
-	log.Printf("starting gRPC interface '%s'", ms.msGrpcServerAddr)
+	log.Printf("starting gRPC interface %s", ms.msGrpcServerAddr)
 	e := gs.Serve(listener)
 
 	return e

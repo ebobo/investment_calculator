@@ -13,7 +13,7 @@ import (
 var opt struct {
 	GRPCAddr string `short:"g" long:"grpc-addr" default:":9092" description:"gRPC listen address"`
 	HTTPAddr string `short:"h" long:"http-addr" default:":9090" description:"http listen address" required:"yes"`
-	MSAddr   string `short:"m" long:"ms-addr" default:":9094" description:"save record micro service gRPC address"`
+	MSAddr   string `short:"m" env:"MS_GRPC_ADDR" long:"ms-addr" default:":9094" description:"save record micro service gRPC address"`
 }
 
 func main() {

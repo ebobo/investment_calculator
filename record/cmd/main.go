@@ -11,7 +11,7 @@ import (
 )
 
 var opt struct {
-	ICGRPCServerAddr string `short:"g" long:"grpc-addr" default:":9092" description:"gRPC server address"`
+	ICGRPCServerAddr string `short:"g" env:"IC_GRPC_ADDR" long:"grpc-addr" default:":9092" description:"gRPC server address"`
 	MSGRPCServerAddr string `short:"m" long:"ms-grpc-addr" default:":9094" description:"micro service gRPC server address"`
 }
 

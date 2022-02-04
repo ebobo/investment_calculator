@@ -6,10 +6,19 @@ Investment calculator go backend
 
 buf mod update
 
-# Build Docker image
+# Build Docker image / push image to docker hub
 
 build
 docker build -f docker/server.Dockerfile -t ic-server:0.1.1 .
+
+build for docker hub
+docker build -f docker/server.Dockerfile -t xbobo/investment_calculator:server_1.1 .
+
+tag image
+docker tag ic-server:0.1.1 xbobo/investment_calculator:server_1.1
+
+push image to docker hub
+docker push xbobo/investment_calculator:server_1.1
 
 run
 docker run -it --name ic-server -p9090:9090 ic-server:0.1.1
