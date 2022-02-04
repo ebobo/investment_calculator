@@ -197,13 +197,17 @@
       </v-col>
     </v-row>
 
-    <v-div v-if="clientHistoryData">
+    <div v-if="clientHistoryData">
       <h3 class="ma-4 blue-grey--text">History :</h3>
       <v-row
         class="ma-2 ml-6 mb-6"
         v-for="(report, index) in clientHistoryData.reports"
         :key="index"
       >
+        <span
+          v-text="index + 1 + '.'"
+          class="subheading font-weight-light mr-2"
+        ></span>
         <span class="subheading font-weight-light mr-2">User: </span>
         <span
           class="subheading font-weight-light mr-4 blue--text"
@@ -225,7 +229,7 @@
           v-text="report.totalPayment"
         ></span>
       </v-row>
-    </v-div>
+    </div>
   </v-container>
 </template>
 
