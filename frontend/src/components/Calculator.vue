@@ -161,6 +161,10 @@
         <v-btn color="success" @click="send">Get Result</v-btn>
       </v-col>
       <v-spacer></v-spacer>
+      <v-col cols="2">
+        <v-btn color="indigo" dark @click="get">Get History</v-btn>
+      </v-col>
+      <v-spacer></v-spacer>
     </v-row>
 
     <h3 class="ma-4 blue-grey--text">Result :</h3>
@@ -192,12 +196,48 @@
         <span class="subheading font-weight-light mr-1">nok</span>
       </v-col>
     </v-row>
+
+    <v-div v-if="clientHistoryData">
+      <h3 class="ma-4 blue-grey--text">History :</h3>
+      <v-row
+        class="ma-2 ml-6 mb-6"
+        v-for="(report, index) in clientHistoryData.reports"
+        :key="index"
+      >
+        <span class="subheading font-weight-light mr-2">User: </span>
+        <span
+          class="subheading font-weight-light mr-4 blue--text"
+          v-text="report.client"
+        ></span>
+        <span class="subheading font-weight-light mr-2">Total Interest: </span>
+        <span
+          class="subheading font-weight-light mr-4 blue--text"
+          v-text="report.totalInterest"
+        ></span>
+        <span class="subheading font-weight-light mr-2">Monthly Payment: </span>
+        <span
+          class="subheading font-weight-light mr-4 blue--text"
+          v-text="report.periodicPayment"
+        ></span>
+        <span class="subheading font-weight-light mr-2">Total Payment: </span>
+        <span
+          class="subheading font-weight-light mr-4 blue--text"
+          v-text="report.totalPayment"
+        ></span>
+      </v-row>
+    </v-div>
   </v-container>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import { setParameters, ParameterData, ResultData } from '../services/data';
+import {
+  setParameters,
+  ParameterData,
+  ResultData,
+  HistoryData,
+  getHistory,
+} from '../services/data';
 
 export default Vue.extend({
   components: {},
@@ -214,6 +254,7 @@ export default Vue.extend({
     totalInterest: number;
     monthlyPayment: number;
     totalPayment: number;
+    clientHistoryData: HistoryData | null;
   } {
     return {
       client: 'Ellen',
@@ -228,6 +269,7 @@ export default Vue.extend({
       totalInterest: 0,
       monthlyPayment: 0,
       totalPayment: 0,
+      clientHistoryData: null,
     };
   },
   // computed: {
@@ -280,6 +322,14 @@ export default Vue.extend({
       this.totalInterest = data.totalInterest;
       this.monthlyPayment = data.periodicPayment;
       this.totalPayment = data.totalPayment;
+    },
+
+    get() {
+      getHistory(this.client)
+        .then((response) => (this.clientHistoryData = response))
+        .catch((error) => {
+          console.log(error);
+        });
     },
   },
 });

@@ -42,7 +42,7 @@ func (ms *RecordService) GetSavedRecords(ctx context.Context, in *proto.User) (*
 		return reports, err
 	}
 	for _, r := range results {
-		reports.Reports = append(reports.Reports, &proto.Report{Client: r.Client, TotalInterest: r.TotalInterest, PeriodicPayment: r.TotalPayment, TotalPayment: r.TotalPayment})
+		reports.Reports = append(reports.Reports, &proto.Report{Client: r.Client, TotalInterest: r.TotalInterest, PeriodicPayment: r.PeriodicPayment, TotalPayment: r.TotalPayment})
 	}
 	log.Println("Records: ", reports)
 

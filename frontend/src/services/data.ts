@@ -18,6 +18,10 @@ export interface ResultData {
   totalPayment: number;
 }
 
+export interface HistoryData {
+  reports: ResultData[];
+}
+
 const http = Axios.create({
   baseURL: process.env.VUE_APP_API_BASE_PATH,
 });
@@ -49,4 +53,11 @@ export async function setParameters(data: ParameterData): Promise<ResultData> {
       console.log(response.data);
       return response.data;
     });
+}
+
+export async function getHistory(client: string): Promise<HistoryData> {
+  return http.get<HistoryData>(`/user/${client}`).then((response) => {
+    console.log(response.data);
+    return response.data;
+  });
 }
