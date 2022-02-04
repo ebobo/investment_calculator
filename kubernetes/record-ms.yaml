@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: record-ms
-          image: xbobo/investment_calculator:record_1.4
+          image: xbobo/investment_calculator:record_1.5
           ports:
             - containerPort: 9094
           env:
