@@ -21,8 +21,6 @@ var mutex sync.RWMutex
 func CreateDataBase() error {
 	os.Remove("ic-database.db")
 
-	log.Println("Creating sqlite-database.db...")
-
 	// make data dir if it is not exit
 	err := makeDirIfNotExists("../data")
 	if err != nil {
@@ -41,7 +39,6 @@ func CreateDataBase() error {
 }
 
 func CreateSchema(db *sqlx.DB) error {
-	log.Println("create schema")
 	for n, statement := range strings.Split(schema, ";") {
 		_, err := db.Exec(statement)
 		if err != nil {
@@ -81,7 +78,6 @@ func PrintRecords(db *sqlx.DB) {
 		var payment float32
 		var t_payment float32
 		row.Scan(&id, &client, &interest, &payment, &t_payment)
-		log.Println("Record: ", id, " ", client, " ", interest, " ", payment, "", t_payment)
 	}
 }
 

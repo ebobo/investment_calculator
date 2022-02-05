@@ -8,7 +8,6 @@ COPY . ./
 RUN make init
 RUN make gen
 RUN make build
-RUN make bf
 
 FROM alpine
 RUN apk --no-cache add ca-certificates

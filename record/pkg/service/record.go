@@ -78,7 +78,7 @@ func (ms *RecordService) Run() {
 	if err != nil {
 		log.Fatalf("did not connect %v", err)
 	} else {
-		log.Printf("connnect to grpc server at %s", ms.icGrpcServerAddr)
+		log.Printf("connect to grpc server at %s", ms.icGrpcServerAddr)
 	}
 
 	//Start a grpc server
