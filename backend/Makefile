@@ -1,4 +1,5 @@
 all: lint gen build
+with-webapp: gen lint build bf  
 
 lint:
 	@buf lint
@@ -7,11 +8,21 @@ gen: clean
 	@buf generate
 
 clean:
-	@rm -rf pkg/api
+	@rm -rf pkg/api pkg/webapp/dist/*
+	@rm -f bin/*
 
 build:
 	@go mod tidy
 	@cd cmd/server && go build -o ../../bin/ic_server
+
+# Build the frontend Vue App for production and create the dist directory.
+# Copy the dist directory to pkg/webapp to compile the dist directory 
+# into the ic-server binary. 
+bf: build-frontend
+build-frontend:
+	@echo "*** $@"
+	@cd ../frontend && yarn && yarn build
+	@cp -r ../frontend/dist pkg/webapp
 
 init:
 	@go install google.golang.org/protobuf/cmd/protoc-gen-go@latest

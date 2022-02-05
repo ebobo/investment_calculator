@@ -3,11 +3,11 @@ package server
 import (
 	"context"
 	"errors"
-	"fmt"
 	"log"
 	"net/http"
 	"time"
 
+	"github.com/ebobo/investment_calculator/pkg/webapp"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
@@ -34,12 +34,18 @@ func (s *Server) startHTTP() error {
 	// This is where you add other stuff you want to map in the mux
 
 	// Config endpoint
-	m.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, "Hello, Welcome to the IC-SERVER !")
-	}).Methods("GET")
+	// m.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+	// 	fmt.Fprintf(w, "Hello, Welcome to the IC-SERVER !")
+	// }).Methods("GET")
 
 	// Add handler for REST interface
 	m.PathPrefix("/api/v1").Handler(restMux)
+
+	// Embed the Vue build directory (dist) into the hbb binary.
+	// If you run make fb it will build the frontend and copy the dist directory
+	// to the pkg/webapp directory.
+	spaHandler := webapp.SpaHandler{StaticPath: "dist", Bundle: webapp.WebAppFS}
+	m.PathPrefix("/").Handler(spaHandler)
 
 	httpServer := &http.Server{
 		Addr:              s.httpListenAddr,
