@@ -3,14 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "vue-cli-service build",
+    "build": "vue-cli-service build --mode production",
     "lint": "vue-cli-service lint",
-    "start": "vue-cli-service serve"
+    "start": "vue-cli-service build --mode development",
+    "start-kube": "vue-cli-service serve --mode production"
   },
   "dependencies": {
     "axios": "^0.25.0",
     "core-js": "^3.6.5",
-    "cross-env": "^7.0.3",
     "vue": "^2.6.11",
     "vuetify": "^2.4.0"
   },

@@ -6,7 +6,6 @@ RUN apk add --no-cache build-base
 WORKDIR /build
 COPY . ./
 RUN make init
-RUN make gen
 RUN make build
 
 FROM alpine

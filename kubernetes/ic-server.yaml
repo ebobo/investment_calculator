@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: ic-server
-          image: xbobo/investment_calculator:server_1.5
+          image: xbobo/investment_calculator:server_1.8
           ports:
             - containerPort: 9090
             - containerPort: 9092
