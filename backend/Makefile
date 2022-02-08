@@ -1,5 +1,5 @@
 all: lint gen build
-with-webapp: gen lint build bf  
+with-webapp: gen lint bf build  
 
 lint:
 	@buf lint
