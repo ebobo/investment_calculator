@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "vue-cli-service build --mode production",
+    "build": "vue-cli-service build --mode development",
     "lint": "vue-cli-service lint",
     "start": "vue-cli-service build --mode development",
     "start-kube": "vue-cli-service serve --mode production"
