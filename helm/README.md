@@ -1,4 +1,4 @@
-# helm install (kubectl get pod / kubectl get all for check deployment)
+# helm install (kubectl get pods / kubectl get all for check deployment)
 
 helm install investment-service helm
 
