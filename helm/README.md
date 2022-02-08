@@ -1,0 +1,19 @@
+# helm install (kubectl get pod / kubectl get all for check deployment)
+
+helm install investment-service helm
+
+# helm upgrade to a new version
+
+helm upgrade investment-service helm
+
+# helm rollback
+
+helm rollback investment-service 1
+
+# helm history (get revision number)
+
+helm history investment-service
+
+# helm uninstall
+
+helm uninstall investment-service

@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    author: qi.xu
+  name: ic-server-deployment
+  labels:
+    app: ic-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ic-server
+  template:
+    metadata:
+      labels:
+        app: ic-server
+    spec:
+      containers:
+        - name: ic-server
+          image: xbobo/investment_calculator:server_1.8
+          ports:
+            - containerPort: 9090
+            - containerPort: 9092
+          env:
+            - name: MS_GRPC_ADDR
+              value: 'record-ms-service:9094'
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ic-http-service
+  labels:
+    app: ic-http-service
+spec:
+  type: NodePort
+  selector:
+    app: ic-server
+  ports:
+    - protocol: TCP
+      # Port exposes the kubernetes service on the specified port within the cluster.
+      # Other pods whthin the cluster can communicate with this server on the specified port.
+      port: 9090
+      # TargetPort is the port on which the service will send requests to.
+      # the pod will be listening on.
+      targetPort: 9090
+      # NodePort exposes a service externally to the cluster by means of the the
+      # target nodes IP address and the NodePort.
+      nodePort: 30090
+      # From the above examples the "ic-service" will be exposed internally
+      # to cluster applications on port 9090 and externally to the cluster on the node IP
+      # address on 9090. It will also forward requests to pods with the label “app: ic-server” on port 9090.
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ic-grpc-service
+  labels:
+    app: ic-grpc-service
+spec:
+  selector:
+    app: ic-server
+  ports:
+    - protocol: TCP
+      port: 9092
+      targetPort: 9092

@@ -1,1 +1,7 @@
 apiVersion: v2
+name: investment-service
+description: Helm chart to Investment Service application
+
+type: application
+application: 0.1.8
+version: 0.1.0
