@@ -4,7 +4,7 @@
 
 replicaCount: 1
 server:
-  image_version: server_1.10
+  image_version: server_1.8
   grpc_server_port: 9092
   rest_server_port: 9090
 record_ms:
