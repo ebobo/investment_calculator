@@ -56,6 +56,7 @@ func (s *LoanServer) GetResult(ctx context.Context, in *proto.Case) (*proto.Repo
 
 	periodocPaymentAmount, totalPayment, totalIntersetAndFees := utility.BankLoanEqualInstallments(
 		uint32(in.GetHouseValue()),
+		uint32(in.GetEquity()),
 		in.GetInterestRate(),
 		uint32(in.GetPaymentYear()),
 		float32(in.GetPeriodicFee()),

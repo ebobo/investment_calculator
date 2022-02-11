@@ -55,7 +55,7 @@ func BankLoanEqualPrincipal(amount uint32, rate float32, durationYear uint32, pe
 }
 
 //等额本息 （每月偿还的金额一样）
-func BankLoanEqualInstallments(amount uint32, rate float32, durationYear uint32, periodicFee float32, oneTimeFee float32) (float32, float32, float32) {
+func BankLoanEqualInstallments(amount uint32, equity uint32, rate float32, durationYear uint32, periodicFee float32, oneTimeFee float32) (float32, float32, float32) {
 
 	periodicRate := rate / 12 / 100
 
@@ -63,11 +63,13 @@ func BankLoanEqualInstallments(amount uint32, rate float32, durationYear uint32,
 
 	exponent := float32(math.Pow(float64((1 + periodicRate)), float64(periods)))
 
-	periodocPaymentAmount := float32(amount)*((periodicRate*exponent)/(exponent-1)) + periodicFee
+	loanAmount := amount - equity
+
+	periodocPaymentAmount := float32(loanAmount)*((periodicRate*exponent)/(exponent-1)) + periodicFee
 
 	totalPayment := periodocPaymentAmount*float32(periods) + oneTimeFee
 
-	totalIntersetAndGebyrer := totalPayment - float32(amount)
+	totalIntersetAndGebyrer := totalPayment - float32(loanAmount)
 
 	return periodocPaymentAmount, totalPayment, totalIntersetAndGebyrer
 }
