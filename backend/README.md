@@ -14,6 +14,9 @@ docker build -f docker/server.Dockerfile -t ic-server:0.1.1 .
 build for docker hub
 docker build -f docker/server.Dockerfile -t xbobo/investment_calculator:server_1.1 .
 
+build for linux amd64 from m1 mac
+docker build --platform=linux/amd64 -f docker/server.Dockerfile -t xbobo/investment_calculator:server_1.1 .
+
 tag image
 docker tag ic-server:0.1.1 xbobo/investment_calculator:server_1.1
 
