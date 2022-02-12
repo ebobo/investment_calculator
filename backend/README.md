@@ -29,6 +29,9 @@ docker run -it --name ic-server -p9090:9090 ic-server:0.1.1
 run (pull image from docker hub)
 docker run -d --name ic-server -p9090:9090 xbobo/investment_calculator:server_1.1
 
+run (with environment variable)
+docker run -it -e MS_GRPC_ADDR=172.17.0.3:9094 --name ic-server -p9090:9090 -p9092:9092 ic-server:0.1.1
+
 stop
 docker stop ic-server
 

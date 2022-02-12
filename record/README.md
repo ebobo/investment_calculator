@@ -23,6 +23,9 @@ docker push xbobo/investment_calculator:record_1.0
 run
 docker run -it --name record-ms record-ms:0.1.0
 
+run (with environment variable local docker)
+docker run -it --name record-ms -e IC_GRPC_ADDR=172.17.0.2:9092 -p9094:9094 xbobo/investment_calculator:record_1.0
+
 stop
 docker stop record-ms
 
