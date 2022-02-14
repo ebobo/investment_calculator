@@ -49,19 +49,14 @@ const (
 
 //GetSavedRecords implementation
 func (ms *RecordService) GetSavedRecords(ctx context.Context, in *proto.User) (*proto.Records, error) {
-
-	fmt.Println("Get saved records")
 	reports := &proto.Records{}
 	results, err := db.GetRecordsByClientName(ms.pgDatabase, in.Client)
-	fmt.Println(results)
 	if err != nil {
 		return reports, err
 	}
 	for _, r := range results {
 		reports.Reports = append(reports.Reports, &proto.Report{Client: r.Client, TotalInterest: r.TotalInterest, PeriodicPayment: r.PeriodicPayment, TotalPayment: r.TotalPayment})
 	}
-	log.Println("Records: ", reports)
-
 	return reports, nil
 }
 
