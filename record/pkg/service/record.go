@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 	"io"
 	"log"
 	"net"
@@ -14,30 +15,45 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/protobuf/types/known/emptypb"
 
-	_ "github.com/mattn/go-sqlite3"
+	// load sqlite driver
+	// _ "github.com/mattn/go-sqlite3"
+
+	// load postgres driver
+	_ "github.com/lib/pq"
 )
 
 // RecordService to save record data to database
 type RecordService struct {
 	icGrpcServerAddr string
 	msGrpcServerAddr string
-	sqliteDatabase   *sqlx.DB
+	pgDatabase       *sqlx.DB
+	// sqliteDatabase   *sqlx.DB
 }
 
 func New(icAddress string, msAddress string) *RecordService {
 	return &RecordService{
 		icGrpcServerAddr: icAddress,
 		msGrpcServerAddr: msAddress,
-		sqliteDatabase:   nil,
+		pgDatabase:       nil,
+		// sqliteDatabase:   nil,
 	}
 }
+
+const (
+	host     = "localhost"
+	port     = 5432
+	user     = "postgres"
+	password = "password"
+	dbname   = "postgres"
+)
 
 //GetSavedRecords implementation
 func (ms *RecordService) GetSavedRecords(ctx context.Context, in *proto.User) (*proto.Records, error) {
 
+	fmt.Println("Get saved records")
 	reports := &proto.Records{}
-	results, err := db.GetRecordsByClient(ms.sqliteDatabase, in.Client)
-
+	results, err := db.GetRecordsByClientName(ms.pgDatabase, in.Client)
+	fmt.Println(results)
 	if err != nil {
 		return reports, err
 	}
@@ -53,23 +69,24 @@ func (ms *RecordService) GetSavedRecords(ctx context.Context, in *proto.User) (*
 func (ms *RecordService) Run() {
 	log.Println("Running record service")
 
-	err := db.CreateDataBase()
+	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
+	pgsql, err := sqlx.Open("postgres", psqlInfo)
 	if err != nil {
-		log.Fatalf("can not create database %v", err)
+		panic(err)
+	}
+	defer pgsql.Close()
+
+	err = pgsql.Ping()
+	if err != nil {
+		pgsql.Close()
+		panic(err)
 	}
 
-	// Open the created SQLite File
-	sqlite, err := sqlx.Open("sqlite3", "../data/ic-database.db")
-	if err != nil {
-		log.Fatalf("can not open database %v", err)
-	}
+	log.Println("Successfully connected to postgres!")
 
-	ms.sqliteDatabase = sqlite
+	ms.pgDatabase = pgsql
 
-	// Defer Closing the database
-	defer ms.sqliteDatabase.Close()
-
-	e := db.CreateSchema(ms.sqliteDatabase) // Create Database Tables
+	e := db.CreateSchemaPG(ms.pgDatabase) // Create Database Tables
 	if e != nil {
 		log.Fatalf("can not create schema  %v", e)
 	}
@@ -112,7 +129,7 @@ func (ms *RecordService) Run() {
 				log.Fatalf("cannot receive %v", err)
 			}
 
-			db.Addrecord(ms.sqliteDatabase, &model.Report{Client: resp.Client, TotalInterest: resp.TotalInterest, PeriodicPayment: resp.PeriodicPayment, TotalPayment: resp.TotalPayment})
+			db.AddrecordToTable(ms.pgDatabase, &model.Report{Client: resp.Client, TotalInterest: resp.TotalInterest, PeriodicPayment: resp.PeriodicPayment, TotalPayment: resp.TotalPayment})
 		}
 	}()
 

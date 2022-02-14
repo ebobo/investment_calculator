@@ -82,12 +82,18 @@ func PrintRecords(db *sqlx.DB) {
 }
 
 func GetRecordsByClient(db *sqlx.DB, client string) ([]model.Report, error) {
-	mutex.RLock()
-	defer mutex.RUnlock()
-
 	var reports []model.Report
 	return reports, db.Select(&reports, "SELECT * FROM records WHERE client = ? ORDER BY id", client)
 }
+
+// sqlite
+// func GetRecordsByClient(db *sqlx.DB, client string) ([]model.Report, error) {
+// 	mutex.RLock()
+// 	defer mutex.RUnlock()
+
+// 	var reports []model.Report
+// 	return reports, db.Select(&reports, "SELECT * FROM records WHERE client = ? ORDER BY id", client)
+// }
 
 func makeDirIfNotExists(dirpath string) error {
 	if _, err := os.Stat(dirpath); os.IsNotExist(err) {
