@@ -40,3 +40,16 @@ docker inspect ic-server | grep IPAddress
 
 clean builder layer image
 docker image prune --filter label=stage=builder
+
+# Debug Methods
+
+if exec to container is needed
+"CMD tail -f /dev/null" --makes the container not quit
+then use "docker exec -it ic-server bash" to use bash in container
+
+"bash: "**_" No such file or directory" error -- means that either the executable binary itself or one of the libraries it needs does not exist
+use "ldd _**" to print shared library dependencies
+
+eg: "linux-vdso.so.1 (0x00007ffcf6559000) libc.musl-x86_64.so.1 => not found"
+
+use "apt-get install musl-dev" to install libc.musl-x86_64.so.1
