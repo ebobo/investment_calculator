@@ -1,5 +1,7 @@
 # helm install (kubectl get pods / kubectl get all for check deployment)
 
+# run this in project root dir
+
 helm install investment-service helm
 
 # helm upgrade to a new version
