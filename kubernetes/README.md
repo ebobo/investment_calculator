@@ -18,6 +18,8 @@ minikube delete --all (Delete all of the minikube clusters)
 
 # kubectl
 
+kubectl get pods / kubectl get all for check deployment
+
 kubectl apply -f ic-server.yaml
 
 kubectl apply -f record-ms.yaml

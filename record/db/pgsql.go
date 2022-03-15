@@ -25,9 +25,6 @@ func CreateSchemaPG(db *sqlx.DB) error {
 }
 
 func AddrecordToTable(db *sqlx.DB, record *model.Report) error {
-	mutex.Lock()
-	defer mutex.Unlock()
-
 	log.Println(record)
 	_, err := db.NamedExec(
 		`INSERT INTO records (client, total_interest, periodic_payment, total_payment)

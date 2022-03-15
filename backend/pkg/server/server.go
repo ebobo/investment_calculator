@@ -76,6 +76,7 @@ func (s *Server) Start() error {
 }
 
 func (s *Server) Shutdown() {
+	fmt.Println("shut down")
 	if s.cancel != nil {
 		s.cancel()
 	}
